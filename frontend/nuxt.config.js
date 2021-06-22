@@ -41,6 +41,12 @@ export default {
     '@nuxtjs/eslint-module'
   ],
 
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: 'http://localhost:8000/api/v1'
+    }
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap

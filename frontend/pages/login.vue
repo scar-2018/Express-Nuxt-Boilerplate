@@ -6,7 +6,7 @@
       </NuxtLink>
     </div>
     <b-card class="mx-auto" header="Login" style="width: 380px;">
-      <b-form @submit="onSubmit">
+      <b-form @submit.prevent="onSubmit">
         <b-form-group
           label="Email address:"
           label-for="email"
@@ -17,6 +17,7 @@
             type="email"
             placeholder="Enter email"
             required
+            email
           />
         </b-form-group>
 
@@ -30,8 +31,9 @@
           />
         </b-form-group>
 
-        <b-button type="submit" variant="primary" class="mr-auto">
-          Submit
+        <b-button type="submit" variant="primary" class="mr-auto" :disabled="submittingAuth">
+          <b-spinner v-if="submittingAuth" small />
+          Login
         </b-button>
         <div class="d-flex mt-2 justify-content-end">
           <span class="mr-1">If you are not a member,</span>
@@ -45,7 +47,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   layout: 'auth',
   data () {
@@ -60,8 +62,9 @@ export default {
     ...mapState('auth', ['submittingAuth'])
   },
   methods: {
-    onSubmit (event) {
-      event.preventDefault()
+    ...mapActions('auth', ['login']),
+    onSubmit () {
+      this.login(this.form)
     }
   }
 }
