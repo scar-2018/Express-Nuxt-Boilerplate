@@ -3,12 +3,14 @@
     <div>
       <Logo />
       <h1 class="title">
-        Landing Page
+        Home Page
       </h1>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  middleware: 'authenticated'
+}
 </script>

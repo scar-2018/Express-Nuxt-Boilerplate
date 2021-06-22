@@ -6,7 +6,7 @@
       </NuxtLink>
     </div>
     <b-card class="mx-auto" header="Login" style="width: 380px;">
-      <b-form v-if="show" @submit="onSubmit" @reset="onReset">
+      <b-form @submit="onSubmit">
         <b-form-group
           label="Email address:"
           label-for="email"
@@ -45,37 +45,23 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   layout: 'auth',
   data () {
     return {
       form: {
         email: '',
-        name: '',
-        food: null,
-        checked: []
-      },
-      foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
-      show: true
+        password: ''
+      }
     }
+  },
+  computed: {
+    ...mapState('auth', ['submittingAuth'])
   },
   methods: {
     onSubmit (event) {
       event.preventDefault()
-      alert(JSON.stringify(this.form))
-    },
-    onReset (event) {
-      event.preventDefault()
-      // Reset our form values
-      this.form.email = ''
-      this.form.name = ''
-      this.form.food = null
-      this.form.checked = []
-      // Trick to reset/clear native browser form validation state
-      this.show = false
-      this.$nextTick(() => {
-        this.show = true
-      })
     }
   }
 }
