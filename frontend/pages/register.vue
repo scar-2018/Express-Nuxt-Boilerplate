@@ -57,6 +57,10 @@
 <script>
 export default {
   layout: 'auth',
+  middleware: 'auth',
+  meta: {
+    requiresGuest: true
+  },
   data () {
     return {
       form: {

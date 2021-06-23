@@ -18,6 +18,7 @@
             placeholder="Enter email"
             required
             email
+            @input="CLEAR_ERROR"
           />
         </b-form-group>
 
@@ -28,8 +29,13 @@
             placeholder="Enter password"
             type="password"
             required
+            @input="CLEAR_ERROR"
           />
         </b-form-group>
+
+        <b-alert v-if="error" variant="danger" show>
+          {{ error.message }}
+        </b-alert>
 
         <b-button type="submit" variant="primary" class="mr-auto" :disabled="submittingAuth">
           <b-spinner v-if="submittingAuth" small />
@@ -47,9 +53,13 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   layout: 'auth',
+  middleware: 'auth',
+  meta: {
+    requiresGuest: true
+  },
   data () {
     return {
       form: {
@@ -59,11 +69,17 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', ['submittingAuth'])
+    ...mapState('auth', ['submittingAuth', 'error'])
+  },
+  mounted () {
+    this.CLEAR_ERROR()
   },
   methods: {
     ...mapActions('auth', ['login']),
+    ...mapMutations('auth', ['CLEAR_ERROR']),
     onSubmit () {
+      this.CLEAR_ERROR()
+
       this.login(this.form)
     }
   }

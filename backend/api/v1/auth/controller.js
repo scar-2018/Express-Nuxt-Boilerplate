@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-const { User } = require('../../../models')
+const { User, Role } = require('../../../models')
 const { secret } = require('../../../config/auth')
 
 module.exports = {
@@ -10,11 +10,17 @@ module.exports = {
       const user = await User.findOne({
         where: {
           email: req.body.email
-        }
+        },
+        include: [{
+          model: Role,
+          as: 'role'
+        }]
       })
 
       if (!user) {
-        res.status(404).send({ message: 'User Not found.' })
+        res.status(404).send({
+          message: 'User not found.'
+        })
       }
 
       const passwordIsValid = bcrypt.compareSync(
@@ -24,8 +30,7 @@ module.exports = {
 
       if (!passwordIsValid) {
         res.status(401).send({
-          accessToken: null,
-          message: 'Invalid Password!'
+          message: 'Invalid email or password.'
         })
       }
 
@@ -34,7 +39,8 @@ module.exports = {
       })
 
       res.status(200).send({
-        token
+        token,
+        user
       })
     } catch (error) {
       res.status(500).send({ message: error.message })
@@ -55,26 +61,15 @@ module.exports = {
   //   })
   // },
 
-  // getMe: async (req, res) => {
-  //   const { user } = req
+  getMe: async (req, res) => {
+    res.status(200).send({ user: req.user })
+  },
 
-  //   try {
-  //     const company = await user.getCompany()
-  //     const routers = await user.getRoutersByRole()
+  logout: async (req, res) => {
+    req.logout()
 
-  //     res.status(200).send({
-  //       data: Object.assign(user.toJSON(), { company }, { routers })
-  //     })
-  //   } catch (err) {
-  //     res.status(500).send({ message: err.message })
-  //   }
-  // },
-
-  // logout: async (req, res) => {
-  //   req.logout()
-
-  //   res.status(200).send({
-  //     message: 'Successfully logged out'
-  //   })
-  // }
+    res.status(200).send({
+      message: 'Successfully logged out'
+    })
+  }
 }

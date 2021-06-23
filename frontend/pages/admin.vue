@@ -3,10 +3,10 @@
     <div>
       <Logo />
       <h1 class="title">
-        Home Page
+        Admin Page
       </h1>
       <b-alert show>
-        You are authenticated as User
+        You are authenticated as Admin
       </b-alert>
     </div>
   </div>
@@ -16,7 +16,7 @@
 export default {
   middleware: 'auth',
   meta: {
-    requiresAuth: true
+    requiresAdmin: true
   }
 }
 </script>
