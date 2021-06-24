@@ -3,6 +3,7 @@ const router = express.Router()
 const passport = require('passport')
 
 const auth = require('./auth')
+const users = require('./users')
 
 /*
 |---------------------------------------------------------------------
@@ -16,5 +17,6 @@ router.get('/', (req, res) => {
 })
 
 router.use('/auth', auth)
+router.use('/users', users)
 
 module.exports = router

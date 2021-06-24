@@ -11,6 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Role.hasMany(models.User, {
+        foreignKey: 'roleId'
+      })
+    }
+    static async getRole(roleName) {
+      const role = await Role.findOne({
+        where: {
+          name: roleName
+        }
+      })
+
+      return role
     }
   }
 
