@@ -24,6 +24,7 @@ export const actions = {
       commit('SET_SUBMITTING', true)
 
       const { data } = await this.$axios.post('/auth/login', payload)
+      
       this.$cookies.set('token', data.token, {
         maxAge: 60 * 60
       })
@@ -44,6 +45,7 @@ export const actions = {
   },
   async fetchUser ({ commit }) {
     const { data } = await this.$axios.get('/auth/me')
+    
     commit('SET_USER', data.user)
   },
   async logout ({ commit }) {

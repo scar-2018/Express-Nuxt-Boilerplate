@@ -6,48 +6,64 @@
       </NuxtLink>
     </div>
     <b-card class="mx-auto" header="Login" style="width: 380px;">
-      <b-form @submit.prevent="onSubmit">
-        <b-form-group
-          label="Email address:"
-          label-for="email"
-        >
-          <b-form-input
-            id="email"
-            v-model="form.email"
-            type="email"
-            placeholder="Enter email"
-            required
-            email
-            @input="CLEAR_ERROR"
-          />
-        </b-form-group>
+      <validation-observer ref="form" v-slot="{ handleSubmit }">
+        <b-form @submit.prevent="handleSubmit(onSubmit)">
+          <validation-provider
+            name="Email"
+            rules="required|email"
+            v-slot="validationContext"
+          >
+            <b-form-group label="Email address:" label-for="email">
+              <b-form-input
+                id="email"
+                v-model="form.email"
+                type="email"
+                placeholder="Enter email"
+                @input="CLEAR_ERROR"
+                :state="getValidationState(validationContext)"
+              />
+              <b-form-invalid-feedback>
+                {{ validationContext.errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </validation-provider>
 
-        <b-form-group label="Password:" label-for="password">
-          <b-form-input
-            id="password"
-            v-model="form.password"
-            placeholder="Enter password"
-            type="password"
-            required
-            @input="CLEAR_ERROR"
-          />
-        </b-form-group>
+          <validation-provider
+            name="Password"
+            rules="required"
+            v-slot="validationContext"
+          >
+            <b-form-group label="Password:" label-for="password">
+              <b-form-input
+                id="password"
+                v-model="form.password"
+                placeholder="Enter password"
+                type="password"
+                @input="CLEAR_ERROR"
+                :state="getValidationState(validationContext)"
+              />
+              <b-form-invalid-feedback>
+                {{ validationContext.errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </validation-provider>
 
-        <b-alert v-if="error" variant="danger" show>
-          {{ error.message }}
-        </b-alert>
+          <b-alert v-if="error" variant="danger" show>
+            {{ error.message }}
+          </b-alert>
 
-        <b-button type="submit" variant="primary" class="mr-auto" :disabled="submittingAuth">
-          <b-spinner v-if="submittingAuth" small />
-          Login
-        </b-button>
-        <div class="d-flex mt-2 justify-content-end">
-          <span class="mr-1">If you are not a member,</span>
-          <NuxtLink to="register" class="font-weight-bold">
-            Register
-          </NuxtLink>
-        </div>
-      </b-form>
+          <b-button type="submit" variant="primary" class="mr-auto" :disabled="submittingAuth">
+            <b-spinner v-if="submittingAuth" small />
+            Login
+          </b-button>
+          <div class="d-flex mt-2 justify-content-end">
+            <span class="mr-1">If you are not a member,</span>
+            <NuxtLink to="register" class="font-weight-bold">
+              Register
+            </NuxtLink>
+          </div>
+        </b-form>
+      </validation-observer>
     </b-card>
   </div>
 </template>
@@ -77,9 +93,11 @@ export default {
   methods: {
     ...mapActions('auth', ['login']),
     ...mapMutations('auth', ['CLEAR_ERROR']),
-    onSubmit () {
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null
+    },
+    onSubmit() {
       this.CLEAR_ERROR()
-
       this.login(this.form)
     }
   }

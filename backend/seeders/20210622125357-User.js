@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const bcrypt = require('bcryptjs')
 
@@ -10,10 +10,10 @@ module.exports = {
       username: 'Admin',
       password: bcrypt.hashSync('password'),
       roleId: 1
-    }], {});
+    }], {})
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Users', null, {})
   }
-};
+}

@@ -1,12 +1,13 @@
+require('dotenv').config()
+
 const bodyParser = require('body-parser')
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const app = express()
-require('dotenv').config();
+const api = require('./api')
 
 require('./plugins/auth')
-const api = require('./api')
 
 app.use(cors())
 app.use(bodyParser.json())

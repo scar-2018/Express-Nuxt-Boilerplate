@@ -19,7 +19,7 @@ function authorize(roles = []) {
       }
 
       // authentication and authorization successful
-      next()
+      return next()
     }
   ]
 }

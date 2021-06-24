@@ -6,6 +6,7 @@ const path      = require('path')
 const basename  = path.basename(module.filename)
 const db        = {}
 
+console.log(config)
 let sequelize
 
 if (config.use_env_variable) {
