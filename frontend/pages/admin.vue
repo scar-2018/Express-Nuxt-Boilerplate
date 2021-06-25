@@ -2,7 +2,22 @@
   <div>
     <b-container>
       <h2>Users</h2>
-      <b-table striped hover :items="users" :fields="fields"></b-table>
+      <b-table
+        id="users-table"
+        striped
+        hover
+        :items="users"
+        :fields="fields"
+      >
+      </b-table>
+      <b-pagination-nav
+        v-model="page"
+        :link-gen="linkGen"
+        :number-of-pages="10"
+        use-router
+        @input="onPageChange"
+      >
+      </b-pagination-nav>
     </b-container>
   </div>
 </template>
@@ -16,7 +31,7 @@ export default {
   },
   data() {
     return {
-      // Note 'isActive' is left out and will not appear in the rendered table
+      page: this.$route.query.page || 1,
       fields: [
         {
           key: 'email',
@@ -36,11 +51,22 @@ export default {
     }
   },
   async fetch() {
-    const response = await this.$axios.get('/users')
+    const response = await this.$axios.get(`/users?page=${this.page}`)
 
     this.users = response.data.users
   },
+  computed: {
+    totalRows() {
+      return this.users.length
+    }
+  },
   methods: {
+    linkGen(pageNum) {
+      return pageNum === 1 ? '?' : `?page=${pageNum}`
+    },
+    onPageChange(page) {
+      this.$fetch()
+    }
   }
 }
 </script>
